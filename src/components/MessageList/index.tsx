@@ -19,18 +19,18 @@ const messagesQueu: Message[] = []
 const socket = io('http://localhost:4000')
 
 socket.on('new_message', (newMessage :Message) => {
+  console.log(newMessage)
   messagesQueu.push(newMessage)
 })
 export function MessageList() {
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
+    console.log(messagesQueu)
     setInterval(() => {
       if (messagesQueu.length > 0) {
         setMessages(prevState => [messagesQueu[0], prevState[0],prevState[1]].filter(Boolean))
-        console.log(messagesQueu)
         messagesQueu.shift()
-        console.log(messagesQueu)
       }
     }, 3000)
   },[])
@@ -47,7 +47,7 @@ export function MessageList() {
       <ul className={styles.messageList}>
         {messages &&
           messages.map((message) => (
-            <li className={styles.message} key={message.id}>
+            <li className={styles.message} key={message.id.replace(/\-/g,'')}>
               <p className={styles.messageContent}>
                 {message.text}
               </p>
