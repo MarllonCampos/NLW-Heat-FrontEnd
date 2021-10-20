@@ -53,7 +53,6 @@ export function AuthProvider(props: AuthProvider) {
     if (token) {
       api.defaults.headers.common.authorization= `Bearer ${token}`
       api.get<User>('profile').then(response => {
-        console.log(response.data)
         setUser(response.data)
       })
     }
