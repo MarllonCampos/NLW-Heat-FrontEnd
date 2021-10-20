@@ -1,10 +1,21 @@
 import styles from './styles.module.scss'
 import {VscSignOut,VscGithubInverted} from 'react-icons/vsc'
-import { useContext } from 'react'
+import { FormEvent, useContext, useState } from 'react'
 import { AuthContext } from '../../contexts/auth'
+import { api } from '../../services/api'
 
 export function SendMessageForm(){
   const {user, signOut} = useContext(AuthContext)
+  const [message,setMessage] = useState('')
+
+  async function handleSendMessage(event:FormEvent) {
+    event.preventDefault();
+    if (!message.trim()){
+      return
+    }
+
+    await api.post('messsages', {message})
+  }
   return (
     <div className={styles.sendMessageFormWrapper}>
       <button className={styles.signOutButton} onClick={signOut}>
@@ -24,13 +35,14 @@ export function SendMessageForm(){
         </span>
       </header>
 
-      <form action="" className={styles.sendMessageForm}>
+      <form onSubmit={handleSendMessage} className={styles.sendMessageForm}>
         <label htmlFor="message">Mensagem</label>
         <textarea 
           name="message"
           id="message"
           placeholder="Qual a sua expectativa para o evento"
-        
+          onChange={event => setMessage(event.target.value)}
+          value={message}
         />
 
         <button type="submit">Enviar Mensagem</button>
